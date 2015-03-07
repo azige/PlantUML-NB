@@ -31,12 +31,18 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.nio.charset.Charset;
+
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
 import org.netbeans.modules.plantumlnb.PrettyPrinter;
 import org.netbeans.modules.plantumlnb.ui.options.PlantUMLPanel;
+
 import static org.netbeans.modules.plantumlnb.ui.options.PlantUMLPanel.DOT_MANUAL_MODE_DOT_PATH;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbPreferences;
 
@@ -61,7 +67,7 @@ public class PUMLGenerator {
     private PUMLGenerator() {
     }
 
-    public String generateIntoString(FileObject inputFile, FileFormat fileFormat) {
+    public byte[] generateIntoBytes(FileObject inputFile, FileFormat fileFormat){
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
 
@@ -80,7 +86,7 @@ public class PUMLGenerator {
             SourceStringReader reader = new SourceStringReader(inputFile.asText(), null);
             // Write the first image to "os"
             String desc = reader.generateImage(os, new FileFormatOption(fileFormat));
-            return new String(os.toByteArray(), Charset.forName("UTF-8"));
+            return os.toByteArray();
         } catch (IOException ex) {
             logger.log(Level.WARNING, ex.getMessage());
         } finally {
@@ -93,32 +99,17 @@ public class PUMLGenerator {
         return null;
     }
 
+    public String generateIntoString(FileObject inputFile, FileFormat fileFormat) {
+        return new String(generateIntoBytes(inputFile, fileFormat), Charset.forName("UTF-8"));
+    }
 
-public void generateIntoFile(FileObject inputFile, File outputFile, FileFormat fileFormat) {
-        String content = generateIntoString(inputFile, fileFormat);
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        try {
-
-            outputFile.createNewFile();
-            fw = new FileWriter(outputFile);
-            bw = new BufferedWriter(fw);
-            bw.write(PrettyPrinter.formatXml(content));
-            bw.flush();
-
+    public void generateIntoFile(FileObject inputFile, File outputFile, FileFormat fileFormat) {
+        byte[] content = generateIntoBytes(inputFile, fileFormat);
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+            output.write(content);
+            output.flush();
         } catch (IOException ex) {
             logger.log(Level.WARNING, ex.getMessage());
-        } finally {
-            try {
-                if (fw != null) {
-                    fw.close();
-                }
-                if (bw != null) {
-                    bw.close();
-                }
-            } catch (IOException ex) {
-                logger.log(Level.WARNING, ex.getMessage());
-            }
         }
     }
 
