@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2013 Venkat Ram Akkineni.
@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.nio.charset.Charset;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -79,7 +80,7 @@ public class PUMLGenerator {
             SourceStringReader reader = new SourceStringReader(inputFile.asText(), null);
             // Write the first image to "os"
             String desc = reader.generateImage(os, new FileFormatOption(fileFormat));
-            return new String(os.toByteArray());
+            return new String(os.toByteArray(), Charset.forName("UTF-8"));
         } catch (IOException ex) {
             logger.log(Level.WARNING, ex.getMessage());
         } finally {
