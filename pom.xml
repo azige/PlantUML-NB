@@ -4,7 +4,7 @@
 
     <groupId>org.netbeans.modules</groupId>
     <artifactId>PlantUML-NB</artifactId>
-    <version>1.3</version>
+    <version>1.5.1</version>
     <packaging>nbm</packaging>
 
     <name>PlantUML-NB</name>
@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.run.params.ide>  </netbeans.run.params.ide>
         <netbeans.platform.version>RELEASE74</netbeans.platform.version>
-        <netbeans.run.params>${netbeans.run.params.ide}</netbeans.run.params>        
+        <netbeans.run.params>${netbeans.run.params.ide}</netbeans.run.params>
     </properties>
 
     <repositories>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>net.sourceforge.plantuml</groupId>
             <artifactId>plantuml</artifactId>
-            <version>7985</version>
+            <version>8020</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -265,5 +265,5 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>    
+    </build>
 </project>
